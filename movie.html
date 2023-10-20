@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영화 검색하기</title>
+    <script>
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0ZmU4ZGVlNGE2ZjYxNDYwM2JjMTA1NGU4N2Y1OGIwNSIsInN1YiI6IjY1MmY4YzEzY2FlZjJkMDBlMjhkN2YxYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Z884JvKcjTu0dINjcwL2kdyStv9X6D351hYGkSYfxpo'
+            }
+        };
+
+        fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', options)
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data)
+                data.results.forEach(element => {
+                    document.querySelector('.row').innerHTML += `
+                        <div class="movie-card" id="${element.id}" onclick="alert('영화 ID: ${element.id}')">
+                <div class="card">
+                    <img src=${`https://image.tmdb.org/t/p/w400` + element.backdrop_path} class="card-img-top" art="...">
+                    <div class="card-body">
+                        <h4 class="card-title" id="card-title">${element.original_title}</h4>
+                        <p class="card-text">${element.overview}</p>
+                        <p class="card-text"><small class="text-body-secondary">${`Rating : ` + element.vote_average}</small></p>
+                    </div>
+                </div>
+            </div>
+                    `;
+                })
+            })
+            .catch(err => console.error(err));
+
+        // .then(response => console.log(response))
+
+        // const button = document.querySelector("movie-card");
+        // button.alert = `영화 ID: ${element.id}`
+
+        // window.onload = function () {
+        //     let el = document.getElementById("movie-card");
+        //     el.onclick = hello;
+        // }
+
+        // function Click() {
+        //     alert(`영화 ID: ${element.id}`)
+        // }
+
+        /* 
+            검색을 하는데에 있어 알고리즘에 대해서 생각해보기
+            말하자면 시나리오를 그린다라는 뜻입니다.
+            아래는 생각하는 힘을 기르기 위해 하는 것입니다. 필수는 아닙니다.
+
+            자 우선, 상황 가정 :유저가 찾고 싶은 영화를 검색해서 찾게 하고 싶다
+            
+            사용자가 입력으로 넣는것은? input에 데이터를 입력을 한다.
+                영화 제목은 어떻게 가져오지?
+                영화에 대한 데이터는 어떻게 가져오지 ? 우리는 맨 처음에 fetch를 통해서 가져왔음
+                이걸 이용하면 되지 않을까?
+                어? 그런데 fetch하고나서 변수로 저장하거나 그런거를 안했는데 어떻게 계속 유지하지?
+                그러면 변수로 저장을 하면 되나? 그런데 어떻게 변수로 저장하지? 모르겠네 패스 다른 방법
+                그러면 그냥 매번 fetch를 해서 데이터를 가져오면 되나?
+            input에 들어온 값이랑 영화 제목이 같은 것을 확인하고 다시 html에 동적으로 채워넣는다.
+
+            정답이랄 것은 없지만 다른 분들은 그러면 그냥 매번 fetch를 해서 데이터를 가져오면 되나?
+            인풋이 변할 때 마다 fetch를 해서 데이터를 얻고 그 데이터와 input의 정보를 가지고
+            search기능을 구현했습니다.
+        
+        */
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const payrollSearch = document.querySelector('#search-box');     
+
+            function search() {
+                // 카드 제목 element를 id 값(card-title)으로 가져오기
+                const payrollTitle = document.querySelectorAll('.card-title');
+                // 사용자가 입력한 검색어의 value값을 가져와 소문자로 변경하여 filterValue에 저장
+                const filterValue = payrollSearch.value.toLowerCase();
+                console.log(payrollTitle);
+                console.log(filterValue);
+
+                // rows 안에 있는 문자열을 for문으로 순회
+                for (let i = 0; i < payrollTitle.length; i++) {
+                    // 현재 순회중인 rows의 textContent를 소문자로 변경하여 LowerRows에 저장
+                    let LowerRows = payrollTitle[i].textContent.toLowerCase();
+                    console.log(LowerRows);
+                    if(i === 0) {
+                        console.log(payrollTitle[i].parentElement)
+                        console.log(payrollTitle[i].parentElement.parentElement)
+                        console.log(payrollTitle[i].parentElement.parentElement.parentElement)
+                        console.log(payrollTitle[i].parentElement.parentElement.parentElement.parentElement)
+                    }
+
+                    const id = payrollTitle[i].parentElement.parentElement.parentElement.id;
+                    // LowerRows가 filterValue를 포함하면 해당 title은 보여지게 하고, 그렇지 않으면 숨김
+                    if (LowerRows.includes(filterValue)) {
+                        document.getElementById(id).style.display = '';
+                    } else {
+                        document.getElementById(id).style.display = 'none';
+                    }
+                }
+            }
+        
+            document.querySelector('#SearchBtn').addEventListener('click',search);
+            //payrollSearch.addEventListener('keyup', search);
+        })
+
+        // $('#SearchBtn').click(Function() {
+        //     let input = $('#search-box').val();
+        //     window.location.replace()
+        // })
+
+    </script>
+    <style>
+        body {
+            background-color: rgb(129, 198, 255);
+        }
+
+        .mytitle {
+            color: rgb(11, 104, 211);
+            background-color: rgb(224, 241, 255);
+            border-radius: 10px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mysearch {
+            color: rgb(247, 251, 255);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .searchframe {
+            width: 15em;
+            border-radius: 10px;
+            padding: 8px;
+            border: 0 solid white;
+            box-shadow: 4px 10px 16px 0 rgb(75, 127, 173);
+            margin: 0px 20px 0px 20px;
+        }
+
+        .searchframe:focus {
+            outline: none;
+        }
+
+        .btn {
+            color: white;
+            padding: 5px;
+            background-color: transparent;
+            border-color: white;
+            border-radius: 7px;
+        }
+
+        .row {
+            width: 100%;
+            flex-direction: row;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .movie-card {
+            width: 400px;
+            padding: 1rem;
+            border-color: white;
+            border-radius: 15px;
+            box-shadow: 4px 8px 16px 0 rgb(75, 127, 173);
+            background-color: aliceblue;
+            margin: 30px auto 30px auto;
+
+            cursor: pointer;
+            scale: 1;
+            transition: scale 0.3s ease;
+        }
+
+        .movie-card:hover {
+            scale: 1.02;
+        }
+
+        .card>img {
+            border-radius: 15px;
+        }
+
+        .card-title {
+            margin: 5px 25px 5px 25px;
+        }
+
+        .card-text {
+            margin: 5px 25px 5px 25px;
+        }
+
+        .text-body-secondary {
+            color: rgb(252, 173, 3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mytitle">
+        <h1>Best Movie Collection</h1>
+    </div>
+    <div class="mysearch">
+        <h2>Search Movie :</h2>
+        <div>
+            <div class="center">
+                <input type="text" class="searchframe" id="search-box" placeholder="영화 제목을 검색해 주세요" />
+            </div>
+        </div>
+        <button class="btn" id="SearchBtn">Search</button>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- <div class="movie-card">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w400/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" class="card-img-top"
+                    art="...">
+                <div class="card-body">
+                    <h4 class="card-title">card title</h4>
+                    <p class="card-text">card</p>
+                    <p class="card-text"><small class="text-body-secondary">star</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="movie-card">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w400/lyQBXzOQSuE59IsHyhrp0qIiPAz.jpg" class="card-img-top"
+                    art="...">
+                <div class="card-body">
+                    <h4 class="card-title">card title</h4>
+                    <p class="card-text">card</p>
+                    <p class="card-text"><small class="text-body-secondary">star</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="movie-card">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w400/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg" class="card-img-top"
+                    art="...">
+                <div class="card-body">
+                    <h4 class="card-title">card title</h4>
+                    <p class="card-text">card</p>
+                    <p class="card-text"><small class="text-body-secondary">star</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="movie-card">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w400/q719jXXEzOoYaps6babgKnONONX.jpg" class="card-img-top"
+                    art="...">
+                <div class="card-body">
+                    <h4 class="card-title">card title</h4>
+                    <p class="card-text">card</p>
+                    <p class="card-text"><small class="text-body-secondary">star</small></p>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
