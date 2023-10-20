@@ -36,42 +36,6 @@
             })
             .catch(err => console.error(err));
 
-        // .then(response => console.log(response))
-
-        // const button = document.querySelector("movie-card");
-        // button.alert = `영화 ID: ${element.id}`
-
-        // window.onload = function () {
-        //     let el = document.getElementById("movie-card");
-        //     el.onclick = hello;
-        // }
-
-        // function Click() {
-        //     alert(`영화 ID: ${element.id}`)
-        // }
-
-        /* 
-            검색을 하는데에 있어 알고리즘에 대해서 생각해보기
-            말하자면 시나리오를 그린다라는 뜻입니다.
-            아래는 생각하는 힘을 기르기 위해 하는 것입니다. 필수는 아닙니다.
-
-            자 우선, 상황 가정 :유저가 찾고 싶은 영화를 검색해서 찾게 하고 싶다
-            
-            사용자가 입력으로 넣는것은? input에 데이터를 입력을 한다.
-                영화 제목은 어떻게 가져오지?
-                영화에 대한 데이터는 어떻게 가져오지 ? 우리는 맨 처음에 fetch를 통해서 가져왔음
-                이걸 이용하면 되지 않을까?
-                어? 그런데 fetch하고나서 변수로 저장하거나 그런거를 안했는데 어떻게 계속 유지하지?
-                그러면 변수로 저장을 하면 되나? 그런데 어떻게 변수로 저장하지? 모르겠네 패스 다른 방법
-                그러면 그냥 매번 fetch를 해서 데이터를 가져오면 되나?
-            input에 들어온 값이랑 영화 제목이 같은 것을 확인하고 다시 html에 동적으로 채워넣는다.
-
-            정답이랄 것은 없지만 다른 분들은 그러면 그냥 매번 fetch를 해서 데이터를 가져오면 되나?
-            인풋이 변할 때 마다 fetch를 해서 데이터를 얻고 그 데이터와 input의 정보를 가지고
-            search기능을 구현했습니다.
-        
-        */
-
         document.addEventListener('DOMContentLoaded', () => {
             const payrollSearch = document.querySelector('#search-box');     
 
@@ -83,36 +47,30 @@
                 console.log(payrollTitle);
                 console.log(filterValue);
 
-                // rows 안에 있는 문자열을 for문으로 순회
+                // payrollTitle 안에 있는 문자열을 for문으로 순회
                 for (let i = 0; i < payrollTitle.length; i++) {
-                    // 현재 순회중인 rows의 textContent를 소문자로 변경하여 LowerRows에 저장
-                    let LowerRows = payrollTitle[i].textContent.toLowerCase();
-                    console.log(LowerRows);
-                    if(i === 0) {
-                        console.log(payrollTitle[i].parentElement)
-                        console.log(payrollTitle[i].parentElement.parentElement)
-                        console.log(payrollTitle[i].parentElement.parentElement.parentElement)
-                        console.log(payrollTitle[i].parentElement.parentElement.parentElement.parentElement)
-                    }
+                    // 현재 순회중인 payrollTitle의 textContent를 소문자로 변경하여 rows에 저장
+                    let rows = payrollTitle[i].textContent.toLowerCase();
+                    console.log(rows);
+                    
+                    // if(i === 0) {
+                    //     console.log(payrollTitle[i].parentElement)
+                    //     console.log(payrollTitle[i].parentElement.parentElement)
+                    //     console.log(payrollTitle[i].parentElement.parentElement.parentElement)
+                    //     console.log(payrollTitle[i].parentElement.parentElement.parentElement.parentElement)
+                    // }
 
                     const id = payrollTitle[i].parentElement.parentElement.parentElement.id;
-                    // LowerRows가 filterValue를 포함하면 해당 title은 보여지게 하고, 그렇지 않으면 숨김
-                    if (LowerRows.includes(filterValue)) {
+                    // rows가 filterValue를 포함하면 해당 title은 보여지게 하고, 그렇지 않으면 숨김
+                    if (rows.includes(filterValue)) {
                         document.getElementById(id).style.display = '';
                     } else {
                         document.getElementById(id).style.display = 'none';
                     }
                 }
             }
-        
             document.querySelector('#SearchBtn').addEventListener('click',search);
-            //payrollSearch.addEventListener('keyup', search);
         })
-
-        // $('#SearchBtn').click(Function() {
-        //     let input = $('#search-box').val();
-        //     window.location.replace()
-        // })
 
     </script>
     <style>
